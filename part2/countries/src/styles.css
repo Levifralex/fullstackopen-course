@@ -1,0 +1,52 @@
+.searchContainer {
+	margin-bottom: 20px;
+}
+
+.searchInputText {
+	margin-right: 10px;
+}
+
+.searchInput {
+	padding: 8px 10px 8px 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.countryInfo {
+	margin: 0px !important;
+}
+
+.countryList {
+	list-style: none;
+	padding: 0;
+}
+
+.countryList li {
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+}
+
+.countryList li:hover {
+	background-color: #f1f1f1;
+}
+
+.btnShowCountryDetail {
+	border: none;
+	cursor: pointer;
+	padding: 6px 18px;
+    border-radius: 6px;
+	color: white;
+	background-color: rgb(4, 86, 245) !important;
+	box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+    font-size: 14px;
+}
+
+.countryFlag {
+	border: #ccc 1px solid;
+}
