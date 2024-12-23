@@ -92,10 +92,15 @@ const App = () => {
               return;
             }
 
-            setMessageValues(
-              false,
-              `Something went wrong on update number of ${updatePerson.name}`
-            );
+            let errorMessage = "";
+
+            if (error.status === 400) {
+              errorMessage = error.response.data.error;
+            } else {
+              errorMessage = `Something went wrong on add ${personObject.name}`;
+            }
+
+            setMessageValues(false, errorMessage);
           });
       }
 
@@ -116,10 +121,16 @@ const App = () => {
       })
       .catch((error) => {
         console.error("error => ", error);
-        setMessageValues(
-          false,
-          `Something went wrong on add ${personObject.name}`
-        );
+
+        let errorMessage = "";
+
+        if (error.status === 400) {
+          errorMessage = error.response.data.error;
+        } else {
+          errorMessage = `Something went wrong on add ${personObject.name}`;
+        }
+
+        setMessageValues(false, errorMessage);
       });
   };
 
@@ -127,8 +138,9 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`)) {
       personService
         .remove(id)
-        .then((deletePerson) => {
-          setPersons(persons.filter((person) => person.id !== deletePerson.id));
+        .then(() => {
+          //setPersons(persons.filter((person) => person.id !== deletePerson.id));
+          setPersons(persons.filter((person) => person.id !== id));
           setMessageValues(true, `${name} deleted!`);
         })
         .catch((error) => {
