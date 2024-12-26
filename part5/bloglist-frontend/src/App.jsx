@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import Notification from './components/Notification'
+import { useState, useEffect, useRef } from 'react'
 import Message from './components/Message'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [message, setMessage] = useState(null)
 
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
@@ -16,15 +16,23 @@ const App = () => {
   //login form fields
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
-  //blog form fields
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const blogsWithFlag = blogs.map(element => {
+        return {
+          ...element,
+          show: false
+        }
+      })
+
+      //order blogs by likes
+      blogsWithFlag.sort((a, b) => b.likes - a.likes)
+
+      setBlogs(blogsWithFlag)
+    })  
   }, [])
 
   useEffect(() => {
@@ -94,10 +102,12 @@ const App = () => {
       
       <p>{user.name} logged-in <button type='button' onClick={() => handleLogout()}>logout</button></p>
 
-      {blogForm()}
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog} currentUser={user} />
+      </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={increaseBlogLikes} removeBlog={confirmDeleteBlog} currentUser={user} />
       )}
     </>
   )
@@ -107,67 +117,57 @@ const App = () => {
     window.location.reload()
   }
 
-  const blogForm = () => (
-    <>
-      <h1>create new</h1>
-      <form onSubmit={addBlog}>
-        <div>
-          title
-            <input
-            type="text"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-            <input
-            type="text"
-            value={author}
-            name="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url
-            <input
-            type="text"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <br/>
-        <button type="submit">create</button>
-      </form>
-      <br/>
-    </>
-  )
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-
+  const addBlog = async (blogObject, user) => {
     try {
-      
-      const blogObject = {
-        title,
-        author,
-        url
-      }
-
       const createdBlog = await blogService.create(blogObject)
+      createdBlog.user = {
+        username: user.username,
+        name: user.name
+      }
+      
+      blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(createdBlog))
 
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-
       //set message ok
-      setMessageValues(true, `a new blog ${title} by ${author} added`)
+      setMessageValues(true, `a new blog ${createdBlog.title} by ${createdBlog.author} added`)
 
     } catch (exception) {
-      setMessageValues(false, 'Wrong credentials')
+      setMessageValues(false, exception.response.data.error)
+    }
+  }
+
+  const increaseBlogLikes = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject.id, blogObject)
+      
+      //modify blog list
+      setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : updatedBlog).sort((a, b) => b.likes - a.likes))
+
+      //set message ok
+      setMessageValues(true, `The blog '${updatedBlog.title}' by ${updatedBlog.author} increased likes`)
+
+    } catch (exception) {
+      setMessageValues(false, exception.response.data.error)
+    }
+  }
+
+  const confirmDeleteBlog = async (blogObject) => {
+    if (window.confirm(`Remove blog '${blogObject.title}' by ${blogObject.author}`)) {
+      deleteBlog(blogObject)
+      return  
+    }
+  }
+
+  const deleteBlog = async (blogObject) => {
+    try {
+      await blogService.remove(blogObject.id)
+
+      //remove blog from list
+      setBlogs(blogs.filter(element => element.id !== blogObject.id).sort((a, b) => b.likes - a.likes))
+    
+      setMessageValues(true, `The blog '${blogObject.title}' by ${blogObject.author} was deleted successfully`)
+    } catch (exception) {
+      setMessageValues(false, exception.response.data.error)
     }
   }
 
