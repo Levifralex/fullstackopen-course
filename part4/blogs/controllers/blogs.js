@@ -30,7 +30,6 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   const user = request.user
 
   const blog = await Blog.findById(request.params.id)
-  /* console.log('blog :>> ', blog) */
 
   if (blog.user.toString() !== user.id.toString()) {
     return response.status(401).json({ error: 'token invalid for this user' })
@@ -48,10 +47,11 @@ blogsRouter.put('/:id', async (request, response) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    user: body.user
   }
 
-  const updatedNote = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  const updatedNote = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 })
 
   response.json(updatedNote)
 
