@@ -117,9 +117,10 @@ const App = () => {
     window.location.reload()
   }
 
-  const addBlog = async (blogObject, user) => {
+  const addBlog = async (blogObject) => {
     try {
       const createdBlog = await blogService.create(blogObject)
+
       createdBlog.user = {
         username: user.username,
         name: user.name
