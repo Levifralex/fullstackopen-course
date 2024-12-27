@@ -12,9 +12,9 @@ const App = () => {
 
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  
+
   //login form fields
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const blogFormRef = useRef()
@@ -32,7 +32,7 @@ const App = () => {
       blogsWithFlag.sort((a, b) => b.likes - a.likes)
 
       setBlogs(blogsWithFlag)
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-            <input
+          <input
             type="text"
             value={username}
             name="Username"
@@ -62,7 +62,7 @@ const App = () => {
         </div>
         <div>
           password
-            <input
+          <input
             type="password"
             value={password}
             name="Password"
@@ -97,9 +97,9 @@ const App = () => {
   const blogList = () => (
     <>
       <h1>blogs</h1>
-      
+
       <Message isSuccess={isSuccess} body={message} />
-      
+
       <p>{user.name} logged-in <button type='button' onClick={() => handleLogout()}>logout</button></p>
 
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
@@ -124,7 +124,7 @@ const App = () => {
         username: user.username,
         name: user.name
       }
-      
+
       blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(createdBlog))
 
@@ -139,7 +139,7 @@ const App = () => {
   const increaseBlogLikes = async (blogObject) => {
     try {
       const updatedBlog = await blogService.update(blogObject.id, blogObject)
-      
+
       //modify blog list
       setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : updatedBlog).sort((a, b) => b.likes - a.likes))
 
@@ -154,7 +154,7 @@ const App = () => {
   const confirmDeleteBlog = async (blogObject) => {
     if (window.confirm(`Remove blog '${blogObject.title}' by ${blogObject.author}`)) {
       deleteBlog(blogObject)
-      return  
+      return
     }
   }
 
@@ -164,7 +164,7 @@ const App = () => {
 
       //remove blog from list
       setBlogs(blogs.filter(element => element.id !== blogObject.id).sort((a, b) => b.likes - a.likes))
-    
+
       setMessageValues(true, `The blog '${blogObject.title}' by ${blogObject.author} was deleted successfully`)
     } catch (exception) {
       setMessageValues(false, exception.response.data.error)
@@ -172,11 +172,11 @@ const App = () => {
   }
 
   function setMessageValues(type, message) {
-    setMessage(message);
-    setIsSuccess(type);
+    setMessage(message)
+    setIsSuccess(type)
     setTimeout(() => {
-      setMessage(null);
-    }, 5000);
+      setMessage(null)
+    }, 5000)
   }
 
   return (
