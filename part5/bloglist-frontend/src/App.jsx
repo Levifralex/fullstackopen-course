@@ -50,10 +50,11 @@ const App = () => {
 
       <Message isSuccess={isSuccess} body={message} />
 
-      <form onSubmit={handleLogin}>
+      <form id='login-form' onSubmit={handleLogin}>
         <div>
           username
           <input
+            data-testid='username'
             type="text"
             value={username}
             name="Username"
@@ -63,6 +64,7 @@ const App = () => {
         <div>
           password
           <input
+            data-testid='password'
             type="password"
             value={password}
             name="Password"

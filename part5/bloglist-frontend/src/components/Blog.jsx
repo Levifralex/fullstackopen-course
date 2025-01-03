@@ -54,11 +54,9 @@ const Blog = ({ blog, currentUser, updateBlog, removeBlog }) => {
   )
 
   return (
-    <div style={blogStyle} className='blogCard'>
-      <div>
-        {blog.title} {blog.author} <button onClick={() => showBlogDetail(blog)}>{isShow ? 'hide' : 'show'}</button>
-        {isShow && blogDetail(blog)}
-      </div>
+    <div style={blogStyle} className='blogCard' data-testid='blogItem'>
+      {blog.title} {blog.author} <button onClick={() => showBlogDetail(blog)}>{isShow ? 'hide' : 'show'}</button>
+      {isShow && blogDetail(blog)}
     </div>
   )
 }
