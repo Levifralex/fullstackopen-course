@@ -5,7 +5,7 @@ const Notification = () => {
   const style = {
     border: 'solid',
     padding: 10,
-    marginBottom: '5%',
+    marginBottom: '2%',
     borderWidth: 1
   }
 
