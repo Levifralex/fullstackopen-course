@@ -1,19 +1,13 @@
-import { useState } from "react";
-import {
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-  useMatch,
-} from "react-router-dom";
-import PropTypes from 'prop-types';
+import { useState } from "react"
+import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom"
+import PropTypes from "prop-types"
 
-import  { useField } from './hooks'
+import { useField } from "./hooks"
 
 const Menu = () => {
   const padding = {
     paddingRight: 5,
-  };
+  }
   return (
     <div>
       <Link style={padding} to="/">
@@ -26,8 +20,8 @@ const Menu = () => {
         about
       </Link>
     </div>
-  );
-};
+  )
+}
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -40,26 +34,28 @@ const AnecdoteList = ({ anecdotes }) => (
       ))}
     </ul>
   </div>
-);
+)
 
 AnecdoteList.propTypes = {
-  anecdotes: PropTypes.array
+  anecdotes: PropTypes.array,
 }
 
 const Anecdote = ({ anecdote }) => {
   return (
     <div>
-      <h2>{anecdote.content} by {anecdote.author}</h2>
+      <h2>
+        {anecdote.content} by {anecdote.author}
+      </h2>
       <p>has {anecdote.votes} votes</p>
       <p>
         for more info see <a href={anecdote.info}>{anecdote.info}</a>
       </p>
     </div>
-  );
-};
+  )
+}
 
 Anecdote.propTypes = {
-  anecdote: PropTypes.object
+  anecdote: PropTypes.object,
 }
 
 const About = () => (
@@ -82,7 +78,7 @@ const About = () => (
       find the best and add more.
     </p>
   </div>
-);
+)
 
 const Footer = () => (
   <div>
@@ -93,28 +89,28 @@ const Footer = () => (
     </a>{" "}
     for the source code.
   </div>
-);
+)
 
 const CreateNew = (props) => {
-  const { inputProps: content, reset: resetContent } = useField('text');
-  const { inputProps: author, reset: resetAuthor } = useField('text');
-  const { inputProps: info, reset: resetInfo } = useField('text');
+  const { inputProps: content, reset: resetContent } = useField("text")
+  const { inputProps: author, reset: resetAuthor } = useField("text")
+  const { inputProps: info, reset: resetInfo } = useField("text")
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     props.addNew({
       content: content.value,
       author: author.value,
       info: info.value,
       votes: 0,
-    });
-  };
+    })
+  }
 
   const resetForm = () => {
-    resetContent();
-    resetAuthor();
-    resetInfo();
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
@@ -123,33 +119,40 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input  {...content} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input  {...author} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input  {...info} />
+          <input {...info} />
         </div>
         <button type="submit">create</button>
-        <button type="button" onClick={() => { resetForm() }}>reset</button>
+        <button
+          type="button"
+          onClick={() => {
+            resetForm()
+          }}
+        >
+          reset
+        </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
 CreateNew.propTypes = {
   addNew: PropTypes.func,
 }
 
-const Notification = ({message}) => {
-  if(message.length === 0) {
-    return(<></>)
+const Notification = ({ message }) => {
+  if (message.length === 0) {
+    return <></>
   }
 
-  return(
+  return (
     <>
       <p>{message}</p>
     </>
@@ -157,7 +160,7 @@ const Notification = ({message}) => {
 }
 
 Notification.propTypes = {
-  message: PropTypes.string
+  message: PropTypes.string,
 }
 
 const App = () => {
@@ -176,39 +179,39 @@ const App = () => {
       votes: 0,
       id: 2,
     },
-  ]);
+  ])
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [notification, setNotification] = useState("");
+  const [notification, setNotification] = useState("")
 
-  const addNew = (anecdote) => {    
-    anecdote.id = Math.round(Math.random() * 10000);
-    setAnecdotes(anecdotes.concat(anecdote));
+  const addNew = (anecdote) => {
+    anecdote.id = Math.round(Math.random() * 10000)
+    setAnecdotes(anecdotes.concat(anecdote))
     setNotification(`a new anecdote ${anecdote.content} created!`)
     setTimeout(() => {
-      setNotification('')
+      setNotification("")
     }, 5000)
-    navigate("/");
-  };
+    navigate("/")
+  }
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
 
   const vote = (id) => {
-    const anecdote = anecdoteById(id);
+    const anecdote = anecdoteById(id)
 
     const voted = {
       ...anecdote,
       votes: anecdote.votes + 1,
-    };
+    }
 
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
-  };
+    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
+  }
 
-  const match = useMatch("/anecdotes/:id");
+  const match = useMatch("/anecdotes/:id")
   const anecdote = match
     ? anecdotes.find((anecdote) => anecdote.id === Number(match.params.id))
-    : null;
+    : null
 
   return (
     <div>
@@ -219,15 +222,18 @@ const App = () => {
       <Notification message={notification} />
 
       <Routes>
-        <Route path="/" element={<AnecdoteList anecdotes={anecdotes}/>} />
-        <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdote={anecdote} />}
+        />
         <Route path="/create" element={<CreateNew addNew={addNew} />} />
         <Route path="/about" element={<About />} />
       </Routes>
-      
+
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
