@@ -1,6 +1,7 @@
 const middleware = require('../utils/middleware')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -55,6 +56,11 @@ blogsRouter.put('/:id', async (request, response) => {
 
   response.json(updatedNote)
 
+})
+
+blogsRouter.get('/:id/comments', async (request, response) => {
+  const comments = await Comment.find({ blog: request.params.id })
+  response.json(comments)
 })
 
 module.exports = blogsRouter

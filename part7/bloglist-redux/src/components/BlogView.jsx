@@ -1,34 +1,28 @@
 import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+
 import { increaseLike } from '../reducers/blogReducer'
 import { showNotification } from '../reducers/notificationReducer'
+import { initializeComments } from '../reducers/commentReducer'
 
 import blogService from '../services/blogs'
+
+import CommentForm from './CommentForm'
 
 const BlogView = ({ blog }) => {
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if(blog) {
+      dispatch(initializeComments(blog.id))
+    }
+  }, [])
+
+  const commentList = useSelector((state) => state.comments)
+
   if (!blog) {
     return null
   }
-
-  //const changeBlogLikes = (blog) => {
-  /* const tempBlog = {
-      ...blog,
-    }
-    delete tempBlog.user
-    console.log('tempBlog :>> ', tempBlog) */
-  /* console.log('blog :>> ', blog)
-    blog.user = undefined
-    console.log('blog :>> ', blog) */
-  /* delete blog.user
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    } */
-
-  /* console.log('updatedBlog :>> ', updatedBlog) */
-  //updateBlog(updatedBlog)
-  //}
 
   const changeBlogLikes = async (blogObject) => {
     try {
@@ -56,6 +50,14 @@ const BlogView = ({ blog }) => {
     }
   }
 
+  const addComment = async (commentObject) => {
+    try {
+      console.log('commentObject :>> ', commentObject)
+    } catch (exception) {
+      console.error('exception :>> ', exception)
+    }
+  }
+
   return (
     <>
       <h1>
@@ -70,6 +72,17 @@ const BlogView = ({ blog }) => {
         <button onClick={() => changeBlogLikes(blog)}>like</button>
       </div>
       <div>added by {blog.user.name}</div>
+
+      <br />
+      <h2>comments</h2>
+      <CommentForm createComment={addComment} blogId={blog.id} />
+      <ul>
+        {commentList.map((comment) => (
+          <li key={comment.id}>
+            {comment.content}
+          </li>
+        ))}
+      </ul>
     </>
   )
 }
