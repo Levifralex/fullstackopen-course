@@ -46,7 +46,10 @@ const ratingExercisesHours = (
   averageHours: number,
   targetHours: number
 ): Rating => {
-  let objectRating
+  let objectRating: Rating = {
+    score: 0,
+    description: "",
+  }
   switch (true) {
     case averageHours >= targetHours:
       objectRating = {
