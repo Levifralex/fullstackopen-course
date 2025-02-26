@@ -3,9 +3,10 @@ import { useEffect } from 'react'
 
 import { increaseLike } from '../reducers/blogReducer'
 import { showNotification } from '../reducers/notificationReducer'
-import { initializeComments } from '../reducers/commentReducer'
+import { initializeComments, createComment } from '../reducers/commentReducer'
 
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 
 import CommentForm from './CommentForm'
 
@@ -13,10 +14,10 @@ const BlogView = ({ blog }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if(blog) {
+    if (blog) {
       dispatch(initializeComments(blog.id))
     }
-  }, [])
+  }, [blog, dispatch])
 
   const commentList = useSelector((state) => state.comments)
 
@@ -52,7 +53,21 @@ const BlogView = ({ blog }) => {
 
   const addComment = async (commentObject) => {
     try {
-      console.log('commentObject :>> ', commentObject)
+      dispatch(createComment(commentObject))
+
+      const isError = await commentService.getError()
+
+      if (!isError) {
+        dispatch(
+          showNotification(
+            {
+              body: `a new comment added to the blog '${blog.title}' by ${blog.author}`,
+              isSuccess: true,
+            },
+            5
+          )
+        )
+      }
     } catch (exception) {
       console.error('exception :>> ', exception)
     }
@@ -76,13 +91,15 @@ const BlogView = ({ blog }) => {
       <br />
       <h2>comments</h2>
       <CommentForm createComment={addComment} blogId={blog.id} />
-      <ul>
-        {commentList.map((comment) => (
-          <li key={comment.id}>
-            {comment.content}
-          </li>
-        ))}
-      </ul>
+      {commentList.length > 0 ? (
+        <ul>
+          {commentList.map((comment) => (
+            <li key={comment.id}>{comment.content}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No comments yet</p>
+      )}
     </>
   )
 }

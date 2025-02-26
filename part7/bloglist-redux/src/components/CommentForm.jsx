@@ -8,7 +8,7 @@ const CommentForm = ({ createComment, blogId }) => {
 
     const commentObject = {
       content,
-      blogId,
+      blog_id: blogId,
     }
 
     createComment(commentObject)
