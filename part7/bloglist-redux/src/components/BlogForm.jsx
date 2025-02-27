@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import { useDispatch } from 'react-redux'
 
+import { Form, Button, Row, Col } from 'react-bootstrap'
+
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -26,46 +28,60 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <>
-      <h1>create new</h1>
-      <form data-testid="blog-form" onSubmit={addBlog}>
-        <div>
-          title
-          <input
-            data-testid="title"
-            type="text"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-            id="title-input"
-          />
-        </div>
-        <div>
-          author
-          <input
-            data-testid="author"
-            type="text"
-            value={author}
-            name="author"
-            onChange={({ target }) => setAuthor(target.value)}
-            id="author-input"
-          />
-        </div>
-        <div>
-          url
-          <input
-            data-testid="url"
-            type="text"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-            id="url-input"
-          />
-        </div>
-        <br />
-        <button id="blog-button" type="submit">
-          create
-        </button>
-      </form>
+      <div style={{ marginBottom: '10px' }}>
+        <h1>create new</h1>
+
+        <Form id="blog-form" data-testid="blog-form" onSubmit={addBlog}>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>title:</Form.Label>
+                <Form.Control
+                  data-testid="title"
+                  id="title-input"
+                  type="text"
+                  name="title"
+                  value={title}
+                  onChange={({ target }) => setTitle(target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group>
+                <Form.Label>author:</Form.Label>
+                <Form.Control
+                  data-testid="author"
+                  id="author-input"
+                  type="author"
+                  name="author"
+                  value={author}
+                  onChange={({ target }) => setAuthor(target.value)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>url:</Form.Label>
+                <Form.Control
+                  data-testid="url"
+                  id="url-input"
+                  type="url"
+                  name="url"
+                  value={url}
+                  onChange={({ target }) => setUrl(target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col></Col>
+          </Row>
+          <br />
+          <Button id="blog-button" variant="primary" type="submit">
+            create
+          </Button>
+        </Form>
+      </div>
     </>
   )
 }

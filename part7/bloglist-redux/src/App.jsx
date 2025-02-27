@@ -10,11 +10,13 @@ import loginService from './services/login'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { showNotification } from './reducers/notificationReducer'
-import { createBlog, initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 
-import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
 import { initializeUsers } from './reducers/userListReducer'
+
+import { Form, Button } from 'react-bootstrap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -42,37 +44,59 @@ const App = () => {
   }, [])
 
   const loginForm = () => (
-    <>
-      <h1>log in to application</h1>
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+      }}
+    >
+      <div
+        className="m-auto"
+        style={{
+          maxWidth: '330px',
+        }}
+      >
+        <h1>log in to application</h1>
 
-      <Message />
+        <Message />
 
-      <form id="login-form" onSubmit={handleLogin}>
         <div>
-          username
-          <input
-            data-testid="username"
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <Form id="login-form" onSubmit={handleLogin}>
+            <Form.Group>
+              <Form.Label>username:</Form.Label>
+              <Form.Control
+                data-testid="username"
+                type="text"
+                name="username"
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>password:</Form.Label>
+              <Form.Control
+                data-testid="password"
+                type="password"
+                name="password"
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </Form.Group>
+            <br />
+            <div className="d-grid gap-2">
+              <Button
+                id="login-button"
+                variant="primary"
+                type="submit"
+                size="lg"
+              >
+                login
+              </Button>
+            </div>
+          </Form>
         </div>
-        <div>
-          password
-          <input
-            data-testid="password"
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
-      </form>
-    </>
+      </div>
+    </div>
   )
 
   const handleLogin = async (event) => {
@@ -114,7 +138,7 @@ const App = () => {
     : null
 
   return (
-    <>
+    <div className="container">
       {user === null ? (
         loginForm()
       ) : (
@@ -132,7 +156,7 @@ const App = () => {
           </Routes>
         </>
       )}
-    </>
+    </div>
   )
 }
 

@@ -1,55 +1,25 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Card, Button } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, currentUser, updateBlog, removeBlog }) => {
   const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+    marginBottom: 15,
+  }
+
+  const linkStyle = {
+    color: 'white',
+    textDecoration: 'none',
   }
 
   const textDetailStyle = {
     margin: 0,
   }
 
-  /* const [isShow, setIsShow] = useState(false)
-
-  const showBlogDetail = (blog) => {
-    blog.show = !blog.show
-    setIsShow(blog.show)
-  } */
-
-  /* const checkUser = (blog) => {
-    return blog.user.username === currentUser.username
-  }
-
-  const changeBlogLikes = (blog) => {
-    delete blog.user
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-    updateBlog(updatedBlog)
-  } */
-
   const deleteBlog = (blog) => {
     removeBlog(blog)
   }
-
-  /* const blogDetail = (blog) => (
-    <div className="blogDetail">
-      <p style={textDetailStyle}>{blog.url}</p>
-      <p style={textDetailStyle}>
-        likes {blog.likes}{' '}
-        <button onClick={() => changeBlogLikes(blog)}>like</button>
-      </p>
-      <p style={textDetailStyle}>{blog.user.name}</p>
-      {checkUser(blog) && deleteButton(blog)}
-    </div>
-  ) */
 
   const deleteButton = (blog) => (
     <>
@@ -60,11 +30,17 @@ const Blog = ({ blog, currentUser, updateBlog, removeBlog }) => {
   )
 
   return (
-    <div style={blogStyle} className="blogCard" data-testid="blogItem">
-      <Link to={`/notes/${blog.id}`}>
-        {blog.title} {blog.author}{' '}
-      </Link>
-    </div>
+    <Card style={blogStyle}>
+      <Card.Body>
+        <Card.Title>{blog.title}</Card.Title>
+        <Card.Text>Author: {blog.author}</Card.Text>
+        <Button variant="primary">
+          <Link to={`/notes/${blog.id}`} style={linkStyle}>
+            Go to blog
+          </Link>
+        </Button>
+      </Card.Body>
+    </Card>
   )
 }
 

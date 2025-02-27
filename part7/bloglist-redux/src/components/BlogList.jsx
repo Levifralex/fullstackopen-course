@@ -9,6 +9,8 @@ import blogService from '../services/blogs'
 import { createBlog, increaseLike, deleteBlogx } from '../reducers/blogReducer'
 import { showNotification } from '../reducers/notificationReducer'
 
+import { Page } from '../styled-components'
+
 const BlogList = () => {
   const dispatch = useDispatch()
 
@@ -105,25 +107,27 @@ const BlogList = () => {
 
   return (
     <>
-      <h1>blogs</h1>
+      <Page>
+        <h1>blogs</h1>
 
-      <Message />
+        <Message />
 
-      {
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <BlogForm createBlog={addBlog} currentUser={user} />
-        </Togglable>
-      }
+        {
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <BlogForm createBlog={addBlog} currentUser={user} />
+          </Togglable>
+        }
 
-      {blogsList.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateBlog={increaseBlogLikes}
-          removeBlog={confirmDeleteBlog}
-          currentUser={user}
-        />
-      ))}
+        {blogsList.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={increaseBlogLikes}
+            removeBlog={confirmDeleteBlog}
+            currentUser={user}
+          />
+        ))}
+      </Page>
     </>
   )
 }

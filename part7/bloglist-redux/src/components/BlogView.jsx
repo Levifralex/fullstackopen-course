@@ -10,6 +10,10 @@ import commentService from '../services/comments'
 
 import CommentForm from './CommentForm'
 
+import { Button } from 'react-bootstrap'
+
+import { Page } from '../styled-components'
+
 const BlogView = ({ blog }) => {
   const dispatch = useDispatch()
 
@@ -75,31 +79,39 @@ const BlogView = ({ blog }) => {
 
   return (
     <>
-      <h1>
-        {blog.title} {blog.author}{' '}
-      </h1>
-      <br />
-      <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div>
-        {blog.likes} likes{' '}
-        <button onClick={() => changeBlogLikes(blog)}>like</button>
-      </div>
-      <div>added by {blog.user.name}</div>
+      <Page>
+        <h1>
+          {blog.title} {blog.author}{' '}
+        </h1>
+        <br />
+        <div>
+          <a href={blog.url}>{blog.url}</a>
+        </div>
+        <div>
+          {blog.likes} likes{' '}
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => changeBlogLikes(blog)}
+          >
+            like
+          </Button>
+        </div>
+        <div>added by {blog.user.name}</div>
 
-      <br />
-      <h2>comments</h2>
-      <CommentForm createComment={addComment} blogId={blog.id} />
-      {commentList.length > 0 ? (
-        <ul>
-          {commentList.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No comments yet</p>
-      )}
+        <br />
+        <h2>comments</h2>
+        <CommentForm createComment={addComment} blogId={blog.id} />
+        {commentList.length > 0 ? (
+          <ul>
+            {commentList.map((comment) => (
+              <li key={comment.id}>{comment.content}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No comments yet</p>
+        )}
+      </Page>
     </>
   )
 }

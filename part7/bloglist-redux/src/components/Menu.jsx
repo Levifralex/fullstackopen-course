@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearUser } from '../reducers/userReducer'
 
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
+
 const Menu = () => {
   const dispatch = useDispatch()
 
@@ -11,15 +13,6 @@ const Menu = () => {
     paddingRight: 5,
   }
 
-  const logoutButton = {
-    marginLeft: 5,
-  }
-
-  const menuStyle = {
-    backgroundColor: '#d3d3d3',
-    padding: 4,
-  }
-
   const handleLogout = () => {
     window.localStorage.clear()
     dispatch(clearUser())
@@ -27,18 +20,35 @@ const Menu = () => {
   }
 
   return (
-    <div style={menuStyle}>
-      <Link style={padding} to="/">
-        blogs
-      </Link>
-      <Link style={padding} to="/users">
-        users
-      </Link>
-      {user.name} logged in
-      <button style={logoutButton} type="button" onClick={() => handleLogout()}>
-        logout
-      </button>
-    </div>
+    <>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/">
+                blogs
+              </Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/users">
+                users
+              </Link>
+            </Nav.Link>
+          </Nav>
+          <Nav>
+            <NavDropdown
+              title={user.name + ' logged in'}
+              id="collapsible-nav-dropdown"
+            >
+              <NavDropdown.Item href="#" onClick={() => handleLogout()}>
+                Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </>
   )
 }
 
